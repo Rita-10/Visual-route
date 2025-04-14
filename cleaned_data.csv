@@ -1,0 +1,192 @@
+time,export,latitude1,longitude1,tea,import_dest,lbs,latitude2,longitude2
+1859,Shanghai,30.6266,122.0634,Black tea,United Kingdom,22292702,55.3781,-3.436
+1859,Shanghai,30.6266,122.0634,Black tea,United States,879601,47.02503,-124.11268
+1859,Shanghai,30.6266,122.0634,Black tea,Australia,535540,-25.2744,133.7751
+1859,Shanghai,30.6266,122.0634,Black tea,Montreal,57087,45.50889,-73.55417
+1859,Shanghai,30.6266,122.0634,Black tea,HongKong,488042,22.3193,114.1694
+1859,Shanghai,30.6266,122.0634,Green tea,United Kingdom,8695896,55.3781,-3.436
+1859,Shanghai,30.6266,122.0634,Green tea,United States,10072546,47.02503,-124.11268
+1859,Shanghai,30.6266,122.0634,Green tea,Australia,1344044,-25.2744,133.7751
+1859,Shanghai,30.6266,122.0634,Green tea,Montreal,453513,45.50889,-73.55417
+1859,Shanghai,30.6266,122.0634,Green tea,HongKong,773305,22.3193,114.1694
+1860,Guangzhou,22.06,113.45,Black tea,United Kingdom,29173867,55.3781,-3.436
+1860,Guangzhou,22.06,113.45,Black tea,United States,1182049,47.02503,-124.11268
+1860,Guangzhou,22.06,113.45,Black tea,Australia,403670,-25.2744,133.7751
+1860,Guangzhou,22.06,113.45,Black tea,Mumbai,166546,19.076,72.8777
+1860,Guangzhou,22.06,113.45,Black tea,Japan,16500,36.2048,138.2529
+1860,Guangzhou,22.06,113.45,Black tea,South America,131327,8.7832,-55.4915
+1860,Guangzhou,22.06,113.45,Black tea,HongKong,2005348,22.3193,114.1694
+1860,Guangzhou,22.06,113.45,Green tea,United Kingdom,1442642,55.3781,-3.436
+1860,Guangzhou,22.06,113.45,Green tea,United States,131171,47.02503,-124.11268
+1860,Guangzhou,22.06,113.45,Green tea,Australia,70424,-25.2744,133.7751
+1860,Guangzhou,22.06,113.45,Green tea,Mumbai,61276,19.076,72.8777
+1860,Guangzhou,22.06,113.45,Green tea,South America,19824,8.7832,-55.4915
+1860,Guangzhou,22.06,113.45,Green tea,HongKong,281996,22.3193,114.1694
+1861,Guangzhou,22.06,113.45,Black tea,United Kingdom,28144101,55.3781,-3.436
+1861,Guangzhou,22.06,113.45,Black tea,United States,216271,47.02503,-124.11268
+1861,Guangzhou,22.06,113.45,Black tea,South America,186910,8.7832,-55.4915
+1861,Guangzhou,22.06,113.45,Black tea,Australia,1478971,-25.2744,133.7751
+1861,Guangzhou,22.06,113.45,Black tea,Mumbai,118052,19.076,72.8777
+1861,Guangzhou,22.06,113.45,Black tea,Shanghai,133985,31.2304,121.4737
+1861,Guangzhou,22.06,113.45,Black tea,Tianjin,3519,39.0851,117.1994
+1861,Guangzhou,22.06,113.45,Black tea,HongKong,2526378,22.3193,114.1694
+1861,Guangzhou,22.06,113.45,Green tea,United Kingdom,2864197,55.3781,-3.436
+1861,Guangzhou,22.06,113.45,Green tea,United States,2664003,47.02503,-124.11268
+1861,Guangzhou,22.06,113.45,Green tea,South America,8400,8.7832,-55.4915
+1861,Guangzhou,22.06,113.45,Green tea,Australia,43648,-25.2744,133.7751
+1861,Guangzhou,22.06,113.45,Green tea,Mumbai,21036,19.076,72.8777
+1861,Guangzhou,22.06,113.45,Green tea,HongKong,838197,22.3193,114.1694
+1862,Fuzhou,25.58,119.28,Black tea,United Kingdom,52121508,55.3781,-3.436
+1862,Fuzhou,25.58,119.28,Black tea,United States,9520302,47.02503,-124.11268
+1862,Fuzhou,25.58,119.28,Black tea,HongKong,3195682,22.3193,114.1694
+1862,Fuzhou,25.58,119.28,Black tea,Australia,8300342,-25.2744,133.7751
+1862,Fuzhou,25.58,119.28,Green tea,United Kingdom,290965,55.3781,-3.436
+1862,Fuzhou,25.58,119.28,Green tea,United States,263284,47.02503,-124.11268
+1862,Fuzhou,25.58,119.28,Green tea,HongKong,3551,22.3193,114.1694
+1862,Fuzhou,25.58,119.28,Green tea,Australia,56281,-25.2744,133.7751
+1863,Ningbo,29.56,121.5,Black tea,HongKong,5893,22.3193,114.1694
+1863,Ningbo,29.56,121.5,Green tea,United Kingdom,5594,55.3781,-3.436
+1863,Ningbo,29.56,121.5,Green tea,HongKong,2787343,22.3193,114.1694
+1863,Xiamen,24.27,118.04,Black tea,United Kingdom,1778349,55.3781,-3.436
+1863,Xiamen,24.27,118.04,Black tea,United States,3422616,47.02503,-124.11268
+1863,Xiamen,24.27,118.04,Black tea,HongKong,1522021,22.3193,114.1694
+1864,Guangzhou,22.06,113.45,Black tea,United Kingdom,9210088,55.3781,-3.436
+1864,Guangzhou,22.06,113.45,Black tea,United States,5490791,47.02503,-124.11268
+1864,Guangzhou,22.06,113.45,Black tea,India,13979,20.5937,78.9629
+1864,Guangzhou,22.06,113.45,Black tea,French,32407,46.2276,2.2137
+1864,Guangzhou,22.06,113.45,Black tea,Sayam,11880,15.87,100.9925
+1864,Guangzhou,22.06,113.45,Black tea,Hamburg,28333,53.5488,9.9872
+1864,Guangzhou,22.06,113.45,Black tea,callao,166969,12.0512,-77.1257
+1864,Guangzhou,22.06,113.45,Black tea,Buenos Aires,132873,-33.7,-61.0
+1864,Guangzhou,22.06,113.45,Black tea,HongKong,818325,22.3193,114.1694
+1864,Guangzhou,22.06,113.45,Black tea,Fuzhou,20633,26.0742,119.2965
+1864,Guangzhou,22.06,113.45,Black tea,Shanghai,7200,31.2304,121.4737
+1864,Guangzhou,22.06,113.45,Black tea,Tianjin,11600,39.0851,117.1994
+1864,Guangzhou,22.06,113.45,Green tea,United Kingdom,1471011,55.3781,-3.436
+1864,Guangzhou,22.06,113.45,Green tea,United States,871057,47.02503,-124.11268
+1864,Guangzhou,22.06,113.45,Green tea,French,181475,46.2276,2.2137
+1864,Guangzhou,22.06,113.45,Green tea,Hamburg,26817,53.5488,9.9872
+1864,Guangzhou,22.06,113.45,Green tea,callao,3424,12.0512,-77.1257
+1864,Guangzhou,22.06,113.45,Green tea,Buenos Aires,41016,-33.7,-61.0
+1864,Guangzhou,22.06,113.45,Green tea,Rio de Janeiro,27215,-22.9111,-43.2056
+1864,Guangzhou,22.06,113.45,Green tea,HongKong,373060,22.3193,114.1694
+1864,Guangzhou,22.06,113.45,Green tea,Shanghai,6300,31.2304,121.4737
+1865,Guangzhou,22.06,113.45,Black tea,United Kingdom,7476031,55.3781,-3.436
+1865,Guangzhou,22.06,113.45,Black tea,United States,189991,47.02503,-124.11268
+1865,Guangzhou,22.06,113.45,Black tea,Hamburg,11379,53.5488,9.9872
+1865,Guangzhou,22.06,113.45,Black tea,Buenos Aires,296951,-33.7,-61.0
+1865,Guangzhou,22.06,113.45,Black tea,HongKong,989686,22.3193,114.1694
+1865,Guangzhou,22.06,113.45,Black tea,Fuzhou,12000,26.0742,119.2965
+1865,Guangzhou,22.06,113.45,Black tea,Shanghai,3002,31.2304,121.4737
+1865,Guangzhou,22.06,113.45,Black tea,Tianjin,30491,39.0851,117.1994
+1865,Guangzhou,22.06,113.45,Green tea,United Kingdom,269211,55.3781,-3.436
+1865,Guangzhou,22.06,113.45,Green tea,United States,645283,47.02503,-124.11268
+1865,Guangzhou,22.06,113.45,Green tea,Hamburg,32910,53.5488,9.9872
+1865,Guangzhou,22.06,113.45,Green tea,Buenos Aires,36958,-33.7,-61.0
+1865,Guangzhou,22.06,113.45,Green tea,Monte Video,41808,-32.5228,-55.7658
+1865,Guangzhou,22.06,113.45,Green tea,HongKong,806784,22.3193,114.1694
+1865,Guangzhou,22.06,113.45,Green tea,Shanghai,83,31.2304,121.4737
+1865,Shanghai,30.6266,122.0634,Black tea,United Kingdom,24192382,55.3781,-3.436
+1865,Shanghai,30.6266,122.0634,Black tea,HongKong,1743997,22.3193,114.1694
+1865,Shanghai,30.6266,122.0634,Black tea,United States,245869,47.02503,-124.11268
+1865,Shanghai,30.6266,122.0634,Black tea,Montreal,32515,45.50889,-73.55417
+1865,Shanghai,30.6266,122.0634,Green tea,United Kingdom,8582027,55.3781,-3.436
+1865,Shanghai,30.6266,122.0634,Green tea,HongKong,431401,22.3193,114.1694
+1865,Shanghai,30.6266,122.0634,Green tea,United States,10425915,47.02503,-124.11268
+1865,Shanghai,30.6266,122.0634,Green tea,Montreal,1502547,45.50889,-73.55417
+1866,Shanghai,30.6266,122.0634,Black tea,United Kingdom,27913972,55.3781,-3.436
+1866,Shanghai,30.6266,122.0634,Black tea,HongKong,3467825,22.3193,114.1694
+1866,Shanghai,30.6266,122.0634,Black tea,United States,20672,47.02503,-124.11268
+1866,Shanghai,30.6266,122.0634,Black tea,Japan,22805,36.2048,138.2529
+1866,Shanghai,30.6266,122.0634,Black tea,Singapore,4500,1.3521,103.8198
+1866,Shanghai,30.6266,122.0634,Black tea,Amoor River,39874,52.945,139.693
+1866,Shanghai,30.6266,122.0634,Green tea,United Kingdom,7993307,55.3781,-3.436
+1866,Shanghai,30.6266,122.0634,Green tea,HongKong,287721,22.3193,114.1694
+1866,Shanghai,30.6266,122.0634,Green tea,United States,9911758,47.02503,-124.11268
+1866,Shanghai,30.6266,122.0634,Green tea,Montreal,283787,45.50889,-73.55417
+1866,Guangzhou,22.06,113.45,Black tea,United Kingdom,7885107,55.3781,-3.436
+1866,Guangzhou,22.06,113.45,Black tea,United States,585837,47.02503,-124.11268
+1866,Guangzhou,22.06,113.45,Black tea,French,11466,46.2276,2.2137
+1866,Guangzhou,22.06,113.45,Black tea,Hamburg,30643,53.5488,9.9872
+1866,Guangzhou,22.06,113.45,Black tea,callao,41400,12.0512,-77.1257
+1866,Guangzhou,22.06,113.45,Black tea,River Plate,56856,-34.00139,-58.39361
+1866,Guangzhou,22.06,113.45,Black tea,HongKong,1361544,22.3193,114.1694
+1866,Guangzhou,22.06,113.45,Black tea,Yantai,1067,37.4635,121.448
+1866,Guangzhou,22.06,113.45,Black tea,Tianjin,5502,39.0851,117.1994
+1866,Guangzhou,22.06,113.45,Green tea,United Kingdom,688264,55.3781,-3.436
+1866,Guangzhou,22.06,113.45,Green tea,United States,11835,47.02503,-124.11268
+1866,Guangzhou,22.06,113.45,Green tea,Hamburg,14912,53.5488,9.9872
+1866,Guangzhou,22.06,113.45,Green tea,callao,7200,12.0512,-77.1257
+1866,Guangzhou,22.06,113.45,Green tea,River Plate,16830,-34.00139,-58.39361
+1866,Guangzhou,22.06,113.45,Green tea,HongKong,400325,22.3193,114.1694
+1867,Tianjin,38.9832,117.7428,Black tea,Siberia and Russia via Kiachta,97393062,50.35,106.45
+1867,Shanghai,30.6266,122.0634,Black tea,United Kingdom,35254451,55.3781,-3.436
+1867,Shanghai,30.6266,122.0634,Black tea,HongKong,7633395,22.3193,114.1694
+1867,Shanghai,30.6266,122.0634,Black tea,United States,26565,47.02503,-124.11268
+1867,Shanghai,30.6266,122.0634,Black tea,Japan,19510,36.2048,138.2529
+1867,Shanghai,30.6266,122.0634,Black tea,Amoor River,66579,52.945,139.693
+1867,Shanghai,30.6266,122.0634,Black tea,Mumbai,220,19.076,72.8777
+1867,Shanghai,30.6266,122.0634,Green tea,United Kingdom,9141467,55.3781,-3.436
+1867,Shanghai,30.6266,122.0634,Green tea,HongKong,350645,22.3193,114.1694
+1867,Shanghai,30.6266,122.0634,Green tea,United States,13035823,47.02503,-124.11268
+1867,Shanghai,30.6266,122.0634,Green tea,Mumbai,102514,19.076,72.8777
+1867,Guangzhou,22.06,113.45,Black tea,United Kingdom,9725800,55.3781,-3.436
+1867,Guangzhou,22.06,113.45,Black tea,United States,275636,47.02503,-124.11268
+1867,Guangzhou,22.06,113.45,Black tea,French,2463,46.2276,2.2137
+1867,Guangzhou,22.06,113.45,Black tea,Hamburg,2328,53.5488,9.9872
+1867,Guangzhou,22.06,113.45,Black tea,Buenos Aires,276480,-33.7,-61.0
+1867,Guangzhou,22.06,113.45,Black tea,Mumbai,115079,19.076,72.8777
+1867,Guangzhou,22.06,113.45,Black tea,Ho Chi Minh City,71131,10.8231,106.6297
+1867,Guangzhou,22.06,113.45,Black tea,HongKong,1394817,22.3193,114.1694
+1867,Guangzhou,22.06,113.45,Green tea,United Kingdom,1181893,55.3781,-3.436
+1867,Guangzhou,22.06,113.45,Green tea,United States,301505,47.02503,-124.11268
+1867,Guangzhou,22.06,113.45,Green tea,French,43051,46.2276,2.2137
+1867,Guangzhou,22.06,113.45,Green tea,Hamburg,66200,53.5488,9.9872
+1867,Guangzhou,22.06,113.45,Green tea,Buenos Aires,36643,-33.7,-61.0
+1867,Guangzhou,22.06,113.45,Green tea,Mumbai,4467,19.076,72.8777
+1867,Guangzhou,22.06,113.45,Green tea,HongKong,323240,22.3193,114.1694
+1867,Fuzhou,25.58,119.28,Black tea,United Kingdom,3902129,55.3781,-3.436
+1867,Fuzhou,25.58,119.28,Black tea,United States,6916342,47.02503,-124.11268
+1867,Fuzhou,25.58,119.28,Black tea,Australia,10797690,-25.2744,133.7751
+1867,Fuzhou,25.58,119.28,Black tea,New Zealand,498795,-40.9006,174.886
+1867,Fuzhou,25.58,119.28,Black tea,cape of good hope,149693,-34.3568,18.474
+1867,Fuzhou,25.58,119.28,Black tea,HongKong,2104202,22.3193,114.1694
+1867,Fuzhou,25.58,119.28,Green tea,United Kingdom,81571,55.3781,-3.436
+1867,Fuzhou,25.58,119.28,Green tea,United States,264003,47.02503,-124.11268
+1867,Fuzhou,25.58,119.28,Green tea,Australia,19400,-25.2744,133.7751
+1867,Fuzhou,25.58,119.28,Green tea,HongKong,34722,22.3193,114.1694
+1868,Shanghai,30.6266,122.0634,Black tea,United Kingdom,46856718,55.3781,-3.436
+1868,Shanghai,30.6266,122.0634,Black tea,HongKong,6759152,22.3193,114.1694
+1868,Shanghai,30.6266,122.0634,Black tea,United States,111223,47.02503,-124.11268
+1868,Shanghai,30.6266,122.0634,Black tea,Japan,1102,36.2048,138.2529
+1868,Shanghai,30.6266,122.0634,Black tea,India,6503,20.5937,78.9629
+1868,Shanghai,30.6266,122.0634,Green tea,United Kingdom,8132301,55.3781,-3.436
+1868,Shanghai,30.6266,122.0634,Green tea,HongKong,688062,22.3193,114.1694
+1868,Shanghai,30.6266,122.0634,Green tea,United States,14737571,47.02503,-124.11268
+1868,Shanghai,30.6266,122.0634,Green tea,Japan,1102,36.2048,138.2529
+1868,Shanghai,30.6266,122.0634,Green tea,Canada,396280,56.1304,106.3468
+1868,Shanghai,30.6266,122.0634,Green tea,India,463521,20.5937,78.9629
+1868,Guangzhou,22.06,113.45,Black tea,United Kingdom,9549015,55.3781,-3.436
+1868,Guangzhou,22.06,113.45,Black tea,United States,215520,47.02503,-124.11268
+1868,Guangzhou,22.06,113.45,Black tea,Mumbai,48600,19.076,72.8777
+1868,Guangzhou,22.06,113.45,Black tea,Hamburg,8971,53.5488,9.9872
+1868,Guangzhou,22.06,113.45,Black tea,callao,19187,12.0512,-77.1257
+1868,Guangzhou,22.06,113.45,Black tea,Monte Video,142964,-32.5228,-55.7658
+1868,Guangzhou,22.06,113.45,Black tea,Buenos Aires,216311,-33.7,-61.0
+1868,Guangzhou,22.06,113.45,Black tea,HongKong,1254112,22.3193,114.1694
+1868,Guangzhou,22.06,113.45,Green tea,United Kingdom,934241,55.3781,-3.436
+1868,Guangzhou,22.06,113.45,Green tea,United States,91800,47.02503,-124.11268
+1868,Guangzhou,22.06,113.45,Green tea,Mumbai,24000,19.076,72.8777
+1868,Guangzhou,22.06,113.45,Green tea,Hamburg,60872,53.5488,9.9872
+1868,Guangzhou,22.06,113.45,Green tea,Buenos Aires,17437,-33.7,-61.0
+1868,Guangzhou,22.06,113.45,Green tea,HongKong,282375,22.3193,114.1694
+1868,Fuzhou,25.58,119.28,Black tea,United Kingdom,43034454,55.3781,-3.436
+1868,Fuzhou,25.58,119.28,Black tea,United States,5058175,47.02503,-124.11268
+1868,Fuzhou,25.58,119.28,Black tea,Australia,12627968,-25.2744,133.7751
+1868,Fuzhou,25.58,119.28,Black tea,New Zealand,458230,-40.9006,174.886
+1868,Fuzhou,25.58,119.28,Black tea,cape of good hope,196431,-34.3568,18.474
+1868,Fuzhou,25.58,119.28,Black tea,HongKong,2131759,22.3193,114.1694
+1868,Fuzhou,25.58,119.28,Green tea,United Kingdom,3196,55.3781,-3.436
+1868,Fuzhou,25.58,119.28,Green tea,United States,33179,47.02503,-124.11268
+1868,Fuzhou,25.58,119.28,Green tea,Australia,30203,-25.2744,133.7751
+1868,Fuzhou,25.58,119.28,Green tea,HongKong,157189,22.3193,114.1694

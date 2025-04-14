@@ -1,0 +1,1061 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visualization of tea trade routes</title>
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            overflow: hidden;
+        }
+
+        #map {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            width: 100%;
+        }
+
+        #control-panel {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            width: 280px;
+        }
+
+        #info-panel {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.9);
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            width: 280px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+
+        #loading-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            color: white;
+            font-size: 1.5em;
+            flex-direction: column;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+        }
+
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        select, input[type="range"] {
+            width: 100%;
+        }
+
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 5px;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        /* 船舶标记 */
+        .ship-marker {
+            background-image: url('/static/小船-蓝.svg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            transform: translateY(42%) !important;
+            transform-box: fill-box;
+            transform-style: preserve-3d;
+            width: 32px !important;
+            height: 32px !important;
+            transition: all 0.3s; /* 添加平滑过渡 */
+            position: relative;
+            z-index: 10;
+            display: block;
+            transition: transform 0.7s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+            filter 0.3s ease;
+            filter: drop-shadow(2px 3px 6px rgba(0, 0, 0, 0.5)) brightness(1.05);
+            transform-origin: center 80%;
+            animation: float 2.8s ease-in-out infinite;
+        }
+
+        /* 浮动动画 */
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0) scale(1);
+                filter: brightness(1.05);
+            }
+            50% {
+                transform: translateY(-12px) scale(1.05);
+                filter: brightness(1.15);
+            }
+        }
+
+        /* 波浪动画 */
+        .wave-container {
+            position: absolute;
+            width: 150%;
+            height: 30px;
+            bottom: -22px;
+            left: -25%;
+            opacity: 0.8;
+            pointer-events: none;
+            mix-blend-mode: screen;
+        }
+
+        .wave {
+            background: radial-gradient(circle at 50% 50%,
+            rgba(33, 150, 243, 0.8) 20%,
+            rgba(33, 150, 243, 0.3) 40%,
+            rgba(33, 150, 243, 0) 70%
+            );
+            animation: wave 1.8s cubic-bezier(0.4, 0, 0.2, 1) infinite,
+            ripple 2.4s infinite;
+        }
+
+        @keyframes ripple {
+            0% {
+                opacity: 0;
+                transform: scale(0.1);
+            }
+            50% {
+                opacity: 0.4;
+            }
+            100% {
+                opacity: 0;
+                transform: scale(2.5);
+            }
+        }
+
+        .stats-item {
+            margin-bottom: 8px;
+            font-size: 0.9em;
+        }
+
+        .stats-label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        .mapboxgl-marker {
+            z-index: 100 !important;
+        }
+
+        .stats-value {
+            color: #2c3e50;
+        }
+
+        #error-message {
+            color: #e74c3c;
+            margin-top: 10px;
+            font-size: 0.9em;
+        }
+
+        .progress-container {
+            width: 100%;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            height: 10px;
+            border-radius: 5px;
+            background-color: #4CAF50;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        /* 路径点标记样式 */
+        /*.waypoint-marker {*/
+        /*    width: 8px;*/
+        /*    height: 8px;*/
+        /*    border-radius: 50%;*/
+        /*    border: 2px solid white;*/
+        /*    box-shadow: 0 2px 4px rgba(0,0,0,0.3);*/
+        /*    transition: all 0.3s ease;*/
+        /*}*/
+        /*.start-point { background: #4CAF50; }  !* 绿色 *!*/
+        /*.end-point { background: #F44336; }    !* 红色 *!*/
+        /*.waypoint { background: #2196F3; }     !* 蓝色 *!*/
+
+        /*.waypoint-marker.selected {*/
+        /*    transform: scale(1.8);*/
+        /*    z-index: 300 !important;*/
+        /*    box-shadow: 0 0 8px rgba(255,235,59,0.8);*/
+        /*}*/
+
+        .mapboxgl-marker.selected {
+            filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.8));
+            transform: scale(1.15);
+            z-index: 200 !important;
+        }
+
+        .selected-route {
+            line-color: #ffd700 !important;
+            line-width: 3 !important;
+        }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+
+<div id="control-panel">
+    <h2>Visualization of tea trade routes</h2>
+    <div class="control-group">
+        <label for="yearSlider">Year: <span id="yearValue">1859</span></label>
+        <input type="range" id="yearSlider" min="1859" max="1868" value="1859" step="1">
+    </div>
+
+    <div class="control-group">
+        <label for="routeSelector">Select route:</label>
+        <select id="routeSelector">
+            <option value="">-- Please select --</option>
+        </select>
+    </div>
+
+    <div class="control-group">
+        <button id="playButton">Play Animation</button>
+        <button id="resetButton">Reset View</button>
+    </div>
+
+    <div id="error-message"></div>
+</div>
+
+<div id="info-panel">
+    <h3>Route Information</h3>
+    <div id="route-info">
+        <p>Please select a route to view detailed information</p>
+    </div>
+</div>
+
+<div id="loading-overlay">
+    <div>Loading data...</div>
+    <div class="progress-container">
+        <div class="progress-bar" id="loading-progress"></div>
+    </div>
+</div>
+
+<script>
+    // import {FBXLoader} from 'three/examples/jsm/loaders/FBXLoader';
+    //
+    // const loader = new FBXLoader();
+    // loader.load('animated_ship.fbx', (fbx) => {
+    //     // 自动处理骨骼动画
+    //     const mixer = new THREE.AnimationMixer(fbx);
+    //     const action = mixer.clipAction(fbx.animations[0]);
+    //     action.play();
+    //
+    //     // 每帧更新动画
+    //     function animate() {
+    //         mixer.update(clock.getDelta());
+    //         requestAnimationFrame(animate);
+    //     }
+    //
+    //     animate();
+    // });
+    // 全局变量
+    let map;
+    let currentMarkers = [];
+    let activeAnimations = new Set();
+    let selectedRouteId = null;
+    let routeData = [];
+    let maxLbs = 0;
+    let isPlaying = false;
+    let playInterval;
+
+    // 初始化地图
+    function initMap() {
+        if (!mapboxgl.supported()) {
+            showError('Your browser does not support WebGL and cannot display 3D maps.');
+            return;
+        }
+        mapboxgl.accessToken = 'pk.eyJ1IjoiMTMxNDAwIiwiYSI6ImNtOTAxMnIxazBpOGsya3Nhdmw2MDgzdWEifQ.JXO93YTQKXwts51IMaPQ5A';
+        map = new mapboxgl.Map({
+            container: 'map',
+            style: 'mapbox://styles/mapbox/satellite-streets-v12',
+            center: [120, 30],
+            zoom: 4,
+            pitch: 25,
+            maxPitch: 70,
+            maxZoom: 12,
+            minZoom: 3,
+            interactive: true,
+            trackResize: true,
+            antialias: true,  // 开启抗锯齿
+            attributionControl: false, // 隐藏默认属性控件
+            renderWorldCopies: false,   // 优化性能
+            bearing: -10, // 初始方位角
+            optimizeForTerrain: true,
+            maxTileCacheSize: 500,
+            localIdeographFontFamily: ['Noto Sans Regular']
+        });
+        // 添加自定义属性控件
+        map.addControl(new mapboxgl.AttributionControl({
+            compact: true,
+            customAttribution: '<a href="#copyright">Historical data sources</a>'
+        }));
+        map.on('style.load', () => {
+            // 添加地形源
+            map.addSource('mapbox-dem', {
+                type: 'raster-dem',
+                url: 'mapbox://mapbox.mapbox-terrain-dem-v1',
+                tileSize: 512,
+                maxzoom: 14
+            });
+
+            // 设置地形
+            map.setTerrain({
+                source: 'mapbox-dem',
+                exaggeration: 1.2
+            });
+
+            map.addLayer({
+                id: '3d-buildings',
+                source: 'composite',
+                'source-layer': 'building',
+                filter: ['==', 'extrude', 'true'],
+                type: 'fill-extrusion',
+                minzoom: 13,
+                paint: {
+                    'fill-extrusion-color': '#ddd',
+                    'fill-extrusion-height': [
+                        "interpolate", ["linear"],
+                        ["zoom"], 15, 0, 15.05, ["get", "height"]
+                    ],
+                    'fill-extrusion-base': [
+                        "interpolate", ["linear"],
+                        ["zoom"], 15, 0, 15.05, ["get", "min_height"]
+                    ],
+                    'fill-extrusion-opacity': 0.6
+                }
+            });
+
+
+            // 添加天空效果
+            map.addLayer({
+                id: 'sky',
+                type: 'sky',
+                paint: {
+                    'sky-type': 'atmosphere',
+                    'sky-atmosphere-sun': [0.0, 90.0],
+                    'sky-atmosphere-sun-intensity': 15
+                }
+            });
+        });
+        map.on('load', onMapLoad);
+    }
+
+    // 地图加载完成回调
+    async function onMapLoad() {
+        showLoading('Loading route data...');
+
+        try {
+            // 显示加载状态
+            showLoading();
+            updateProgress(0);
+
+            // 调用API获取数据
+            const response = await fetch('/api/data');
+            updateProgress(20);
+
+            // 检查响应状态
+            if (!response.ok) {
+                throw new Error(`Network Error: ${response.status}`);
+            }
+
+            updateProgress(30);
+
+            // 解析JSON数据
+            const data = await response.json();
+            console.log('API响应数据:', data);
+            updateProgress(50);
+
+            // 验证数据格式
+            if (!data?.routes || !Array.isArray(data.routes)) {
+                throw new Error('Invalid data format: routes data does not exist or is not an array');
+            }
+
+            updateProgress(60);
+
+            // 预处理数据
+            routeData = preprocessData(data.routes);
+            if (!routeData || routeData.length === 0) {
+                throw new Error('No valid route data: The data is empty after preprocessing');
+            }
+            updateProgress(75);
+
+            // 计算最大重量用于比例显示
+            const lbsValues = routeData.map(r => r.lbs).filter(Boolean);
+            if (lbsValues.length === 0) {
+                throw new Error('Invalid weight data: All recorded lbs values ​​are invalid');
+            }
+            maxLbs = Math.max(...lbsValues);
+            updateProgress(85);
+
+            // 初始化UI
+            initUI();
+            updateVisualization(1859);
+            updateProgress(95);
+
+            // 完成加载
+            updateProgress(100);
+            setTimeout(hideLoading, 500);
+
+        } catch (error) {
+            console.error('An error occurred while loading data:', error);
+            showError(`Data loading failed: ${error.message}`);
+            hideLoading();
+        }
+    }
+
+    // 数据预处理
+    function preprocessData(routes) {
+        return routes.map(route => {
+            // 转换路径
+            const path = convertPath(route.path);
+
+            // 计算总距离
+            let totalDistance = 0;
+            for (let i = 1; i < path.length; i++) {
+                totalDistance += calculateDistance(path[i - 1], path[i]);
+            }
+
+            // 计算平均速度 (假设默认180天航程)
+            const duration = route.duration || 180;
+            const avgSpeed = totalDistance / duration;
+
+            return {
+                ...route,
+                id: generateRouteId(route),
+                path,
+                totalDistance,
+                avgSpeed,
+                duration
+            };
+        }).filter(route =>
+            route.path.length >= 10 &&
+            route.lbs > 0 &&
+            route.time >= 1859 &&
+            route.time <= 1868
+        );
+    }
+
+    // 生成唯一航线ID
+    function generateRouteId(route) {
+        return `${route.export}-${route.import_dest}-${route.time}-${route.tea}`.replace(/\s+/g, '-');
+    }
+
+    // 转换路径坐标
+    function convertPath(path) {
+        return path.map(point => {
+            const lng = parseFloat(Number(point.lng).toFixed(6));
+            const lat = parseFloat(Number(point.lat).toFixed(6));
+
+            if (isNaN(lng) || isNaN(lat) ||
+                lng < -180 || lng > 180 ||
+                lat < -90 || lat > 90) {
+                return null;
+            }
+
+            return [lng, lat];
+        }).filter(Boolean);
+    }
+
+    // 计算两点间距离 (Haversine公式)
+    function calculateDistance(point1, point2) {
+        const R = 6371; // 地球半径(km)
+        const dLat = (point2[1] - point1[1]) * Math.PI / 180;
+        const dLon = (point2[0] - point1[0]) * Math.PI / 180;
+        const a =
+            Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+            Math.cos(point1[1] * Math.PI / 180) *
+            Math.cos(point2[1] * Math.PI / 180) *
+            Math.sin(dLon / 2) * Math.sin(dLon / 2);
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    }
+
+
+    function createShipMarker() {
+        const el = document.createElement('div');
+        el.className = 'ship-marker'; // 必须作为主元素
+        el.style.transform = 'rotate(0deg)';
+
+        const waveContainer = document.createElement('div');
+        waveContainer.className = 'wave-container';
+
+        // 正确的DOM结构
+        const container = document.createElement('div');
+        container.appendChild(el);
+        container.appendChild(waveContainer);
+        return container;
+    }
+
+    // 计算航行方向
+    // function calculateBearing(prev, current) {
+    //     const y = current[0] - prev[0];
+    //     const x = current[1] - prev[1];
+    //     return (Math.atan2(y, x) * 180) / Math.PI + 90;
+    // }
+
+    function calculateBearing(from, to) {
+    const startLng = from[0] * Math.PI / 180;
+    const startLat = from[1] * Math.PI / 180;
+    const endLng = to[0] * Math.PI / 180;
+    const endLat = to[1] * Math.PI / 180;
+    const y = Math.sin(endLng - startLng) * Math.cos(endLat);
+    const x = Math.cos(startLat) * Math.sin(endLat) -
+              Math.sin(startLat) * Math.cos(endLat) * Math.cos(endLng - startLng);
+    let angle = Math.atan2(y, x);
+    angle = angle * 180 / Math.PI;
+    return (angle + 360) % 360; // 转换为0-360度
+}
+
+
+    function startShipAnimation(path, marker, isSelected) {
+        const ANIMATION_DURATION = 45000; // 45秒完成全程
+        const CAMERA_OFFSET = 0.018; // 经度偏移量
+        let animationFrameId;
+        let startTime = null;
+        const animate = (timestamp) => {
+            if (!startTime) startTime = timestamp;
+            const elapsed = timestamp - startTime;
+            const progress = Math.min(elapsed / ANIMATION_DURATION, 1);
+            const mapBearing = map.getBearing();
+
+
+            // 使用立方缓动函数
+            const easedProgress = cubicEaseInOut(progress);
+
+            // 获取插值后的当前位置
+            const currentPos = sphericalInterpolate(path, easedProgress);
+
+            // 更新标记位置
+            marker.setLngLat(currentPos);
+
+            // 计算动态航向（包含预测）
+            const bearing = calculateDynamicBearing(path, easedProgress);
+            marker.setRotation(bearing);
+            // 第一视角跟随逻辑
+            if (isSelected) {
+                // 计算相机偏移位置
+                const offsetX = CAMERA_OFFSET * Math.cos(bearing * Math.PI / 180);
+                const offsetY = CAMERA_OFFSET * Math.sin(bearing * Math.PI / 180);
+                const altitude = 2000 + (path.length * progress * 15); // 每航点增加15米高度
+                map.jumpTo({
+                    center: [
+                        currentPos[0] - offsetX,
+                        currentPos[1] - offsetY
+                    ],
+                    bearing: bearing + 8,
+                    pitch: Math.min(progress * 60 + 25, 70), // 动态俯仰角度
+                    zoom: 5.2,
+                    essential: true,
+                    altitude: altitude
+                });
+                // map.flyTo({
+                //     center: [currentPos[0] - offsetX, currentPos[1] - offsetY],
+                //     bearing: bearing + 8,
+                //     pitch: Math.min(progress * 60 + 25, 70),
+                //     zoom: 5.2,
+                //     altitude: altitude,
+                //     speed: 0.5,  // 运动速度
+                //     curve: 1.2    // 飞行曲线
+                // });
+
+            }
+            if (progress < 1) {
+                animationFrameId = requestAnimationFrame(animate);   //保证60fps
+                activeAnimations.add(animationFrameId);
+            } else {
+                // 循环动画
+                startTime = null;
+                animationFrameId = requestAnimationFrame(animate);
+                activeAnimations.add(animationFrameId);
+            }
+        };
+        animationFrameId = requestAnimationFrame(animate);
+        activeAnimations.add(animationFrameId);
+        return animationFrameId;
+    }
+
+    // 立方缓动函数
+    function cubicEaseInOut(t) {
+        t = Math.min(Math.max(t, 0), 1);
+        return t < 0.5 ?
+            4 * t * t * t :
+            1 - Math.pow(-2 * t + 2, 3) / 2;
+    }
+
+    // 动态航向计算（带预测机制）
+    function calculateDynamicBearing(path, progress) {
+        const LOOK_AHEAD_FACTOR = 0.07; // 7%的前视预测
+        const totalPoints = path.length;
+
+        const currentIndex = Math.floor(progress * (totalPoints - 1));
+        const lookAheadIndex = Math.min(
+            currentIndex + Math.floor(totalPoints * LOOK_AHEAD_FACTOR),
+            totalPoints - 1
+        );
+
+        // 处理边界情况
+        if (currentIndex >= totalPoints - 1) return 0;
+        if (lookAheadIndex <= currentIndex) return calculateBearing(path[currentIndex], path[currentIndex + 1]);
+
+        return calculateBearing(path[currentIndex], path[lookAheadIndex]);
+    }
+
+    // 球面路径插值
+    function sphericalInterpolate(path, t) {
+        // 计算总距离
+        let totalDistance = 0;
+        const segmentDistances = [];
+        for (let i = 1; i < path.length; i++) {
+            const dist = calculateDistance(path[i - 1], path[i]);
+            segmentDistances.push(dist);
+            totalDistance += dist;
+        }
+        // 计算目标距离
+        const targetDistance = t * totalDistance;
+        let accumulated = 0;
+
+        // 找到当前所在线段
+        for (let i = 0; i < segmentDistances.length; i++) {
+            if (accumulated + segmentDistances[i] >= targetDistance) {
+                const ratio = (targetDistance - accumulated) / segmentDistances[i];
+                return interpolateCoordinate(path[i], path[i + 1], ratio);
+            }
+            accumulated += segmentDistances[i];
+        }
+
+        // 返回最后一个点作为保底
+        return path[path.length - 1];
+    }
+
+    // 球面坐标插值
+    function interpolateCoordinate(start, end, ratio) {
+        const [lng1, lat1] = start.map(deg => deg * Math.PI / 180);
+        const [lng2, lat2] = end.map(deg => deg * Math.PI / 180);
+
+        // 计算夹角
+        const d = 2 * Math.asin(Math.sqrt(
+            Math.pow(Math.sin((lat2 - lat1) / 2), 2) +
+            Math.cos(lat1) * Math.cos(lat2) *
+            Math.pow(Math.sin((lng2 - lng1) / 2), 2)
+        ));
+
+        // 球面线性插值
+        const A = Math.sin((1 - ratio) * d) / Math.sin(d);
+        const B = Math.sin(ratio * d) / Math.sin(d);
+
+        const x = A * Math.cos(lat1) * Math.cos(lng1) + B * Math.cos(lat2) * Math.cos(lng2);
+        const y = A * Math.cos(lat1) * Math.sin(lng1) + B * Math.cos(lat2) * Math.sin(lng2);
+        const z = A * Math.sin(lat1) + B * Math.sin(lat2);
+
+        return [
+            ((Math.atan2(y, x) * 180 / Math.PI + 540) % 360) - 180, // 经度
+            Math.atan2(z, Math.sqrt(x * x + y * y)) * 180 / Math.PI      // 纬度
+        ];
+    }
+
+    // 缓动函数
+    function easeInOutQuad(t) {
+        return t < 0.5 ? 2 * t * t : -1 + (4 - 2 * t) * t;
+    }
+
+
+    // 更新可视化
+    function updateVisualization(year) {
+        // 清除旧元素
+        activeAnimations.forEach(id => cancelAnimationFrame(id));
+        activeAnimations.clear();
+        currentMarkers.forEach(marker => marker.remove());
+        currentMarkers = [];
+
+        // 过滤当前年份的数据
+        const validData = routeData.filter(item => item.time == year);
+
+        if (validData.length === 0) {
+            showError(`没有找到 ${year} 年的航线数据`);
+            return;
+        }
+
+        // 更新航线选择器
+        document.getElementById('routeSelector').addEventListener('change', e => {
+            selectedRouteId = e.target.value || null;
+            const currentYear = parseInt(document.getElementById('yearSlider').value);
+
+            // 查找当前选中航线
+            const selectedRoute = routeData.find(route =>
+                route.id === selectedRouteId &&
+                route.time === currentYear
+            );
+            if (selectedRoute) {
+                showRouteInfo(selectedRoute);
+                // 自动聚焦到该航线
+                flyToRoute(selectedRoute);
+            } else {
+                clearRouteInfo();
+            }
+            updateVisualization(currentYear);
+        });
+
+        // 新增自动展示逻辑
+        if (selectedRouteId) {
+            const selectedRoute = validData.find(r => r.id === selectedRouteId);
+            if (selectedRoute) {
+                showRouteInfo(selectedRoute);
+                // 高亮选中航线
+                map.setFeatureState(
+                    {source: 'routes', id: selectedRouteId},
+                    {selected: true}
+                );
+            }
+        }
+
+        function flyToRoute(route) {
+            const bounds = new mapboxgl.LngLatBounds();
+            route.path.forEach(point => bounds.extend(point));
+
+            map.fitBounds(bounds, {
+                padding: 80,
+                duration: 1800,
+                essential: true,
+                pitch: 45,
+                bearing: 30
+            });
+        }
+
+        function clearRouteInfo() {
+            document.getElementById('route-info').innerHTML =
+                '<p>请选择一条航线查看详细信息</p>';
+            selectedRouteId = null;
+        }
+
+        const selector = document.getElementById('routeSelector');
+        selector.innerHTML = '<option value="">-- 请选择 --</option>';
+
+        validData.forEach((item) => {
+            const option = document.createElement('option');
+            option.value = item.id;
+            option.text = `${item.export} → ${item.import_dest} (${item.tea})`;
+            selector.appendChild(option);
+        });
+
+        // 如果之前选择了某条航线，尝试保持选择
+        if (selectedRouteId) {
+            const selectedOption = selector.querySelector(`option[value="${selectedRouteId}"]`);
+            if (selectedOption) {
+                selectedOption.selected = true;
+            } else {
+                selectedRouteId = null;
+            }
+        }
+
+        // 创建航线图层
+        if (map.getLayer('routes')) map.removeLayer('routes');
+        if (map.getSource('routes')) map.removeSource('routes');
+
+        map.addSource('routes', {
+            type: 'geojson',
+            data: {
+                type: 'FeatureCollection',
+                features: validData.map(item => ({
+                    type: 'Feature',
+                    properties: {
+                        id: item.id,
+                        export: item.export,
+                        import_dest: item.import_dest,
+                        color: item.tea === 'Black tea' ? '#8B4513' : '#228B22',
+                        width: 0.5 + (item.lbs / maxLbs) * 3,
+                        opacity: 0.7
+                    },
+                    geometry: {
+                        type: 'LineString',
+                        coordinates: item.path
+                    }
+                }))
+            }
+        });
+
+        map.addLayer({
+            id: 'routes',
+            type: 'line',
+            source: 'routes',
+            paint: {
+                'line-color': ['get', 'color'],
+                'line-width': ['get', 'width'],
+                'line-opacity': ['get', 'opacity']
+            }
+        });
+
+
+        // 启动所有航线动画
+        validData.forEach((item) => {
+            if (item.path.length < 2) return;
+            const marker = new mapboxgl.Marker({
+                element: createShipMarker(),
+                rotation: 0, // 强制初始角度
+                rotationAlignment: 'viewport', // 相对视口方向
+                pitchAlignment: 'viewport'     // 保持俯仰角对齐
+            }).setLngLat(item.path[0]).addTo(map);
+
+            currentMarkers.push(marker);
+
+            const animationId = startShipAnimation(
+                item.path,
+                marker,
+                item.id === selectedRouteId,
+                item.avgSpeed
+            );
+        });
+
+        // 添加航线交互
+        map.on('click', 'routes', (e) => {
+            const feature = e.features[0];
+            const routeId = feature.properties.id;
+            const route = validData.find(r => r.id === routeId);
+
+            if (route) {
+                showRouteInfo(route);
+                // 选中该航线
+                document.getElementById('routeSelector').value = routeId;
+                selectedRouteId = routeId;
+                updateVisualization(year);
+            }
+        });
+
+
+        // // 创建路径点图层
+        // const pointFeatures = validData.flatMap(route =>
+        //     route.path.map((coord, index) => ({
+        //         type: 'Feature',
+        //         geometry: {
+        //             type: 'Point',
+        //             coordinates: coord
+        //         },
+        //         properties: {
+        //             routeId: route.id,
+        //             type: index === 0 ? 'start' :
+        //                 index === route.path.length - 1 ? 'end' : 'waypoint',
+        //             sequence: index + 1,
+        //             totalPoints: route.path.length
+        //         }
+        //     }))
+        // );
+        // // 添加点数据源
+        // if (map.getSource('route-points')) map.removeSource('route-points');
+        // map.addSource('route-points', {
+        //     type: 'geojson',
+        //     data: {
+        //         type: 'FeatureCollection',
+        //         features: pointFeatures
+        //     }
+        // });
+        // // 添加点图层
+        // if (!map.getLayer('route-points')) {
+        //     map.addLayer({
+        //         id: 'route-points',
+        //         type: 'circle',
+        //         source: 'route-points',
+        //         paint: {
+        //             'circle-color': [
+        //                 'match', ['get', 'type'],
+        //                 'start', '#4CAF50',
+        //                 'end', '#F44336',
+        //                 '#2196F3'
+        //             ],
+        //             'circle-radius': [
+        //                 'case',
+        //                 ['==', ['get', 'type'], 'waypoint'], 4,
+        //                 6
+        //             ],
+        //             'circle-stroke-width': 2,
+        //             'circle-stroke-color': 'white'
+        //         }
+        //     });
+        // }
+        //
+        //
+        // // 添加交互功能
+        // map.on('click', 'route-points', (e) => {
+        //     const features = map.queryRenderedFeatures(e.point, {
+        //         layers: ['route-points']
+        //     });
+        //
+        //     if (features.length > 0) {
+        //         const point = features[0].properties;
+        //         new mapboxgl.Popup()
+        //             .setLngLat(e.lngLat)
+        //             .setHTML(`
+        //             <div class="point-info">
+        //                 <h4>航点详情</h4>
+        //                 <p>类型：${getPointTypeCN(point.type)}</p>
+        //                 <p>序号：${point.sequence}/${point.totalPoints}</p>
+        //                 <p>经度：${e.lngLat.lng.toFixed(4)}°</p>
+        //                 <p>纬度：${e.lngLat.lat.toFixed(4)}°</p>
+        //                 <p>所属航线：${getRouteName(point.routeId)}</p>
+        //             </div>
+        //         `)
+        //             .addTo(map);
+        //     }
+        // });
+
+        map.on('mouseenter', 'routes', () => {
+            map.getCanvas().style.cursor = 'pointer';
+        });
+
+        map.on('mouseleave', 'routes', () => {
+            map.getCanvas().style.cursor = '';
+        });
+    }
+
+    // 显示航线信息
+    function showRouteInfo(route) {
+        const infoPanel = document.getElementById('route-info');
+
+        infoPanel.innerHTML = `
+            <div class="stats-item">
+                <span class="stats-label">Route:</span>
+                <span class="stats-value">${route.export} → ${route.import_dest}</span>
+            </div>
+            <div class="stats-item">
+                <span class="stats-label">Tea Type:</span>
+                <span class="stats-value">${route.tea}</span>
+            </div>
+            <div class="stats-item">
+                <span class="stats-label">Years:</span>
+                <span class="stats-value">${route.time}</span>
+            </div>
+            <div class="stats-item">
+                <span class="stats-label">Transport volume:</span>
+                <span class="stats-value">${formatNumber(route.lbs)} lbs</span>
+            </div>
+            <div class="stats-item">
+                <span class="stats-label">Total distance:</span>
+                <span class="stats-value">${route.totalDistance.toFixed(2)} km</span>
+            </div>
+            <div class="progress-container">
+                <div class="progress-bar" style="width: ${(route.lbs / maxLbs) * 100}%"></div>
+            </div>
+            <small>Transport volume share: ${((route.lbs / maxLbs) * 100).toFixed(1)}%</small>
+        `;
+    }
+
+    // 初始化UI控件
+    function initUI() {
+        // 年份选择
+        document.getElementById('yearSlider').addEventListener('input', _.throttle(e => {
+            const year = parseInt(e.target.value);
+            document.getElementById('yearValue').textContent = year;
+            selectedRouteId = null;
+            updateVisualization(year);
+        }, 300));
+
+        // 航线选择
+        document.getElementById('routeSelector').addEventListener('change', e => {
+            selectedRouteId = e.target.value || null;
+            updateVisualization(document.getElementById('yearSlider').value);
+        });
+
+        // 播放/暂停按钮
+        document.getElementById('playButton').addEventListener('click', () => {
+            isPlaying = !isPlaying;
+            document.getElementById('playButton').textContent = isPlaying ? 'Pause Animation' : 'Play Animation';
+
+            if (isPlaying) {
+                let year = parseInt(document.getElementById('yearSlider').value);
+                playInterval = setInterval(() => {
+                    year++;
+                    if (year > 1868) year = 1859;
+
+                    document.getElementById('yearSlider').value = year;
+                    document.getElementById('yearValue').textContent = year;
+                    updateVisualization(year);
+                }, 45100);
+            } else {
+                clearInterval(playInterval);
+            }
+        });
+
+        // 重置按钮
+        document.getElementById('resetButton').addEventListener('click', () => {
+            map.flyTo({
+                center: [120, 30],
+                zoom: 4,
+                pitch: 25,
+                bearing: 0
+            });
+        });
+    }
+
+    // 显示加载状态
+    function showLoading(message = 'loading...') {
+        document.getElementById('loading-overlay').style.display = 'flex';
+        document.querySelector('#loading-overlay div').textContent = message;
+    }
+
+    // 更新加载进度
+    function updateProgress(percent) {
+        document.getElementById('loading-progress').style.width = `${percent}%`;
+    }
+
+    // 隐藏加载状态
+    function hideLoading() {
+        document.getElementById('loading-overlay').style.display = 'none';
+    }
+
+    // 显示错误信息
+    function showError(message) {
+        document.getElementById('error-message').textContent = message;
+        setTimeout(() => {
+            document.getElementById('error-message').textContent = '';
+        }, 5000);
+    }
+
+    // 数字格式化
+    function formatNumber(num) {
+        return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    }
+
+
+    // 初始化应用
+    initMap();
+</script>
+</body>
+</html>
