@@ -15,46 +15,48 @@ from waypoints_db import waypoints_db
     #return waypoints_db.get((origin, dest), [])
 
 
-def process_data():
+#
+#def process_data():
     # 在开头添加
-    start_time = time.time()
-    print(f"[{datetime.now()}] 开始处理数据...")
+#start_time = time.time()
+
+#print(f"[{datetime.now()}] 开始处理数据...")
     # 数据加载与清洗
-    df = pd.read_csv("cleaned_data.csv")
+    #df = pd.read_csv("cleaned_data.csv")
 
     # 重命名列 import 为 import_dest（避免关键字冲突）。过滤掉 lbs（货物重量）为 0 或负值的无效记录。
-    df = df.rename(columns={"import": "import_dest"})
-    df = df[df['lbs'] > 0]
+    #df = df.rename(columns={"import": "import_dest"})
+    #df = df[df['lbs'] > 0]
 
     # 地理修正规则
-    geo_corrections = {
-        "United Kingdom": {"longitude2": -3.436},
-        "Bombay": {"import_dest": "Mumbai", "latitude2": 19.0760, "longitude2": 72.8777},
-        "Saigon": {"import_dest": "Ho Chi Minh City", "latitude2": 10.8231, "longitude2": 106.6297},
-        "Singapore": {"latitude2": 1.9157, "longitude2": 104.1064},
-        "Australia": {"latitude2": -26.8798, "longitude2": 153.0834},
-        "Canada": {"latitude2": 51.6335, "longitude2": -128.49},
-        "Monte Video": {"latitude2": -34.8574, "longitude2": -56.1511},
-        "Sayam": {"latitude2": 13.5004, "longitude2": 100.4713}
-    }
+    #geo_corrections = {
+        #"United Kingdom": {"longitude2": -3.436},
+        #"Bombay": {"import_dest": "Mumbai", "latitude2": 19.0760, "longitude2": 72.8777},
+        #"Saigon": {"import_dest": "Ho Chi Minh City", "latitude2": 10.8231, "longitude2": 106.6297},
+        #"Singapore": {"latitude2": 1.9157, "longitude2": 104.1064},
+        #"Australia": {"latitude2": -26.8798, "longitude2": 153.0834},
+        #"Canada": {"latitude2": 51.6335, "longitude2": -128.49},
+        #"Monte Video": {"latitude2": -34.8574, "longitude2": -56.1511},
+        #"Sayam": {"latitude2": 13.5004, "longitude2": 100.4713}
+    #}
 
     # 应用修正
-    for origin, correction in geo_corrections.items():
-        print(f"修正 {origin} 地理数据，correction: {correction}")
-        mask = df["import_dest"].str.contains(origin, case=False)
-        df.loc[mask, list(correction.keys())] = list(correction.values())
+    #for origin, correction in geo_corrections.items():
+        #print(f"修正 {origin} 地理数据，correction: {correction}")
+        #mask = df["import_dest"].str.contains(origin, case=False)
+        #df.loc[mask, list(correction.keys())] = list(correction.values())
 
     # 路径生成核心逻辑
-    def generate_safe_route(row):
-        waypoints = get_nautical_waypoints(row['export'], row['import_dest'])
-        all_points = [
-            (row['latitude1'], row['longitude1']),
-            *waypoints,
-            (row['latitude2'], row['longitude2'])
-        ]
+    #def generate_safe_route(row):
+        #waypoints = get_nautical_waypoints(row['export'], row['import_dest'])
+        #all_points = [
+            #(row['latitude1'], row['longitude1']),
+            #*waypoints,
+            #(row['latitude2'], row['longitude2'])
+        #]
 
-        path = []
-        land_points = 0
+        #path = []
+        #land_points = 0
 app = Flask(__name__)
 
 
